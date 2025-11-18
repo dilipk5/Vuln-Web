@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero">
+    <h1>Welcome to Vuln-Web 🔓</h1>
+    <p>⚠️ This is an intentionally vulnerable web application for learning purposes!</p>
+    
+    {% if session.user_id %}
+        <p>Welcome back, <strong>{{ session.username }}</strong>!</p>
+    {% else %}
+        <p><a href="/register" class="btn">Get Started</a></p>
+    {% endif %}
+</div>
+
+<div class="features">
+    <div class="feature-card">
+        <h3>📝 Blog</h3>
+        <p>Create and share posts with the community</p>
+        <a href="/blog">Visit Blog</a>
+    </div>
+    
+    <div class="feature-card">
+        <h3>🛒 Shop</h3>
+        <p>Browse and purchase products</p>
+        <a href="/shop">Visit Shop</a>
+    </div>
+    
+    {% if session.is_admin %}
+    <div class="feature-card">
+        <h3>👑 Admin Panel</h3>
+        <p>Manage users and content</p>
+        <a href="/admin">Admin Dashboard</a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="warning-box">
+    <h3>⚠️ Security Warning</h3>
+    <p>This application contains INTENTIONAL security vulnerabilities for educational purposes.</p>
+    <ul>
+        <li>Default admin credentials: admin / admin123</li>
+        <li>SQL Injection vulnerabilities in search and login</li>
+        <li>XSS vulnerabilities in blog posts and comments</li>
+        <li>IDOR vulnerabilities in user profiles and orders</li>
+        <li>And much more...</li>
+    </ul>
+    <p><strong>NEVER deploy this to a production environment!</strong></p>
+</div>
+{% endblock %}

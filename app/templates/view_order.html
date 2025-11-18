@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Order #{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="order-detail">
+    <h1>Order Details #{{ order.id }}</h1>
+    
+    <div class="hint-box">
+        <p>⚠️ IDOR Vulnerability: No authorization check!</p>
+        <p>Try changing the order ID: <code>/orders/1</code>, <code>/orders/2</code>, etc.</p>
+        <p>You can view ANYONE's orders!</p>
+    </div>
+    
+    <div class="order-card">
+        <p><strong>Customer:</strong> {{ order.username }}</p>
+        <p><strong>Product:</strong> {{ order.name }}</p>
+        <p><strong>Description:</strong> {{ order.description }}</p>
+        <p><strong>Quantity:</strong> {{ order.quantity }}</p>
+        <p><strong>Total Price:</strong> ${{ "%.2f"|format(order.total_price) }}</p>
+        <p><strong>Status:</strong> <span class="status-badge">{{ order.status }}</span></p>
+        <p><strong>Order Date:</strong> {{ order.created_at }}</p>
+    </div>
+    
+    <a href="/orders" class="btn btn-secondary">Back to My Orders</a>
+</div>
+{% endblock %}

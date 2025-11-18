@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <h2>User Profile</h2>
+    
+    <div class="profile-card">
+        {% if user.profile_picture %}
+            <img src="/uploads/{{ user.profile_picture }}" alt="Profile Picture" class="profile-pic">
+        {% else %}
+            <div class="profile-pic-placeholder">👤</div>
+        {% endif %}
+        
+        <h3>{{ user.username }}</h3>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>User ID:</strong> {{ user.id }}</p>
+        <p><strong>Admin:</strong> {{ 'Yes' if user.is_admin else 'No' }}</p>
+        <p><strong>Member Since:</strong> {{ user.created_at }}</p>
+        
+        {% if session.user_id %}
+            <div class="profile-actions">
+                <a href="/user/{{ user.id }}/edit" class="btn">Edit Profile</a>
+                <a href="/upload" class="btn btn-secondary">Upload Picture</a>
+            </div>
+            
+            <div class="hint-box">
+                <p>💡 IDOR Vulnerability: Try changing the user ID in the URL!</p>
+                <p>Example: <code>/user/1/edit</code> or <code>/user/2/edit</code></p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

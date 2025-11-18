@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Users{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <h1>User Management</h1>
+    
+    <div class="hint-box">
+        <p>⚠️ CSRF Vulnerability: No CSRF token protection!</p>
+        <p>Delete action has no confirmation dialog</p>
+    </div>
+    
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Admin</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td class="password-field">{{ user.password }}</td>
+                <td>{{ '✓' if user.is_admin else '✗' }}</td>
+                <td>{{ user.created_at }}</td>
+                <td>
+                    <a href="/user/{{ user.id }}" class="btn btn-small">View</a>
+                    <a href="/admin/delete_user/{{ user.id }}" class="btn btn-small btn-danger" 
+                       onclick="return confirm('Delete this user?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="hint-box">
+        <h4>🔓 Cryptographic Failures Visible Here:</h4>
+        <ul>
+            <li>Passwords stored in PLAIN TEXT!</li>
+            <li>All passwords visible to admin</li>
+            <li>No password hashing (bcrypt, Argon2, etc.)</li>
+        </ul>
+    </div>
+    
+    <a href="/admin" class="btn btn-secondary">Back to Dashboard</a>
+</div>
+{% endblock %}

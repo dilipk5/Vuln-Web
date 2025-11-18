@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<div class="search-results">
+    <!-- VULNERABLE: Reflected XSS -->
+    <h2>Search Results for: {{ query | safe }}</h2>
+    
+    <div class="hint-box">
+        <p>⚠️ Reflected XSS Vulnerability!</p>
+        <p>Try: <code>?q=&lt;script&gt;alert('XSS')&lt;/script&gt;</code></p>
+    </div>
+    
+    {% if posts %}
+        <div class="posts-grid">
+            {% for post in posts %}
+            <div class="post-card">
+                <h3><a href="/blog/{{ post.id }}">{{ post.title }}</a></h3>
+                <p class="post-preview">{{ post.content[:150] }}...</p>
+                <a href="/blog/{{ post.id }}" class="btn btn-small">Read More</a>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No posts found for "{{ query | safe }}"</p>
+    {% endif %}
+    
+    <a href="/blog" class="btn btn-secondary">Back to Blog</a>
+</div>
+{% endblock %}

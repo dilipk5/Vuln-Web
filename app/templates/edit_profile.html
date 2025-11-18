@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Edit Profile</h2>
+    
+    <div class="hint-box">
+        <p>⚠️ VULNERABILITY: No authorization check!</p>
+        <p>You can edit ANY user's profile by changing the URL</p>
+    </div>
+    
+    <form method="POST" action="/user/{{ user.id }}/edit">
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ user.email }}" required>
+        </div>
+        
+        <button type="submit" class="btn">Update Profile</button>
+    </form>
+    
+    <div class="hint-box">
+        <p>💉 SQL Injection: Try injecting SQL in the email field!</p>
+        <p>Example: <code>test@test.com', is_admin=1 WHERE id={{ user.id }}; --</code></p>
+    </div>
+</div>
+{% endblock %}

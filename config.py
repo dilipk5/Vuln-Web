@@ -5,7 +5,7 @@ class Config:
     SECRET_KEY = 'dev1234'
 
     SESSION_COOKIE_SECURE = False
-    SESSION_COOOKIE_HTTPONLY - False
+    SESSION_COOOKIE_HTTPONLY = False
 
     SQLALCHEMY_DATABASE_URI = 'sqlite:///vulnweb.db'
     SQLALCHEMY_TRACK_MODIFICATIONS= False

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <h1>👑 Admin Dashboard</h1>
+    
+    <div class="hint-box">
+        <p>⚠️ Weak Access Control: Only checks session variable!</p>
+        <p>Try tampering with cookies: Set <code>is_admin=1</code> in browser DevTools</p>
+    </div>
+    
+    <div class="admin-stats">
+        <div class="stat-card">
+            <h3>👥 Total Users</h3>
+            <p class="stat-number">{{ user_count }}</p>
+        </div>
+        
+        <div class="stat-card">
+            <h3>📝 Total Posts</h3>
+            <p class="stat-number">{{ post_count }}</p>
+        </div>
+        
+        <div class="stat-card">
+            <h3>🛒 Total Orders</h3>
+            <p class="stat-number">{{ order_count }}</p>
+        </div>
+    </div>
+    
+    <div class="admin-menu">
+        <h2>Admin Actions</h2>
+        <ul class="admin-links">
+            <li><a href="/admin/users" class="btn">Manage Users</a></li>
+            <li><a href="/blog" class="btn">Manage Posts</a></li>
+            <li><button onclick="createBackup()" class="btn btn-warning">Create Backup</button></li>
+        </ul>
+    </div>
+    
+    <div class="backup-section">
+        <h3>Database Backup</h3>
+        <form id="backup-form">
+            <div class="form-group">
+                <label for="filename">Backup Filename:</label>
+                <input type="text" id="filename" name="filename" value="backup.sql">
+            </div>
+            <button type="button" onclick="createBackup()" class="btn">Create Backup</button>
+        </form>
+        
+        <div class="hint-box">
+            <h4>💉 Command Injection Vulnerability!</h4>
+            <p>Try these payloads in filename:</p>
+            <ul>
+                <li><code>backup.sql; ls -la</code></li>
+                <li><code>backup.sql; cat /etc/passwd > static/backup/passwd.txt</code></li>
+                <li><code>backup.sql && whoami > static/backup/user.txt</code></li>
+                <li><code>backup.sql | cat app/config.py > static/backup/config.txt</code></li>
+            </ul>
+            <p>After running, check: <code>http://localhost:5000/static/backup/</code></p>
+        </div>
+    </div>
+</div>
+
+<script>
+function createBackup() {
+    const filename = document.getElementById('filename').value;
+    
+    fetch('/admin/backup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'filename=' + encodeURIComponent(filename)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Backup created successfully!');
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Backup created! Check static/backup/ directory');
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Vuln-Web{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">🔓 Vuln-Web</a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/blog">Blog</a></li>
+                <li><a href="/shop">Shop</a></li>
+                {% if session.user_id %}
+                    <li><a href="/user/{{ session.user_id }}">Profile</a></li>
+                    <li><a href="/orders">My Orders</a></li>
+                    {% if session.is_admin %}
+                        <li><a href="/admin">Admin</a></li>
+                    {% endif %}
+                    <li><a href="/logout">Logout</a></li>
+                {% else %}
+                    <li><a href="/login">Login</a></li>
+                    <li><a href="/register">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        <p>⚠️ Vuln-Web - Intentionally Vulnerable Application - For Educational Purposes Only</p>
+    </footer>
+</body>
+</html>
