@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask, request
 import sqlite3
 import os
+import logging
 
 # Get the parent directory (vuln-web root)
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
@@ -9,6 +10,63 @@ app = Flask(__name__,
             template_folder='templates',
             static_folder=os.path.join(basedir, 'static'))
 app.config.from_object('config.Config')
+
+# ------------------------------
+# POST BODY LOGGING
+# ------------------------------
+
+# Ensure log directory exists
+log_dir = os.path.join(basedir, 'logs')
+os.makedirs(log_dir, exist_ok=True)
+
+# Configure logger
+logging.basicConfig(level=logging.INFO)
+post_logger = logging.getLogger("vulnweb_post_logger")
+post_logger.setLevel(logging.INFO)
+
+# Create file handler
+log_file = os.path.join(log_dir, 'post.log')
+handler = logging.FileHandler(log_file)
+handler.setLevel(logging.INFO)
+
+# Create formatter
+formatter = logging.Formatter('%(asctime)s - IP: %(client_ip)s - PATH: %(path)s - BODY: %(body)s')
+handler.setFormatter(formatter)
+
+# Add handler to logger
+post_logger.addHandler(handler)
+
+print(f"✓ POST logging enabled: {log_file}")
+
+# Middleware hook to log POST request bodies
+@app.before_request
+def log_post_body():
+    if request.method == 'POST':
+        # Get form data
+        form_data = dict(request.form)
+        
+        # Get raw body if no form data
+        if not form_data:
+            body_data = request.get_data(as_text=True)
+        else:
+            body_data = str(form_data)
+        
+        # Log it
+        post_logger.info(
+            f"POST request received",
+            extra={
+                "client_ip": request.remote_addr,
+                "path": request.path,
+                "body": body_data
+            }
+        )
+        
+        # Also print to console for debugging
+        print(f"[POST] {request.remote_addr} -> {request.path} | Body: {body_data}")
+
+# ------------------------------
+# DATABASE FUNCTIONS
+# ------------------------------
 
 # Database connection helper
 def get_db():
@@ -179,3 +237,4 @@ def init_db():
 
 # Import routes after app is created
 from app import routes
+
